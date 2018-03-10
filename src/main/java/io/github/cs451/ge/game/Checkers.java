@@ -9,7 +9,6 @@ import lombok.ToString;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -25,6 +24,7 @@ public class Checkers implements Game {
     private Coordinate selectedPiece;
 
     private CheckersPlayer currentTurn;
+    private boolean mustTakeMoves;
 
     public Checkers(CheckersPlayer player1, CheckersPlayer player2) {
         this.player1 = player1;
@@ -80,15 +80,46 @@ public class Checkers implements Game {
         return handleMove(action);
     }
 
+    private CheckersUIResponse handleSelection(CheckersUIAction action) {
+        System.out.println("Calling handle selection.");
+
+
+        if (selectedPiece != null) return null;
+
+        Coordinate selected = action.getLocation();
+        Piece piece = getPiece(selected);
+        if (piece.getPlayer() == null || !piece.getPlayer().equals(action.getPlayer()))
+            return new CheckersUIResponse(false, CheckersUIResponse.ResponseType.INVALID_SELECTION);
+
+
+        CheckersMoveCollection moves = getAllMoves(action.getPlayer());
+        // If there is an attack move available
+        if (getAllMoves(action.getPlayer()).hasAnAttackMove() && !getAllMoves(piece).hasAnAttackMove()) {
+            return new CheckersUIResponse(false, CheckersUIResponse.ResponseType.HAVE_TO_ATTACK);
+        }
+
+        applySelection(piece);
+        return new CheckersUIResponse(true, CheckersUIResponse.ResponseType.SUCCESS);
+    }
+
     private CheckersUIResponse handleMove(CheckersUIAction action) {
         System.out.println("Calling handle move.");
+        CheckersPlayer player = action.getPlayer();
         // There is no selected piece.
         if (selectedPiece == null) return null;
 
-        List<Move> moves = getAllMoves(getPiece(selectedPiece));
-        Collections.sort(moves);
+        // Player wants to disconnect
+        if (selectedPiece.equals(action.getLocation())) {
+            if (mustTakeMoves) {
+                return new CheckersUIResponse(false, CheckersUIResponse.ResponseType.MUST_COMPLETE_JUMPS);
+            }
+            removeSelection();
+            return new CheckersUIResponse(true, CheckersUIResponse.ResponseType.SUCCESS);
+        }
 
-        boolean hasAttackMove = false;
+        CheckersMoveCollection moves = getAllMoves(player);
+
+        boolean hasAttackMove = moves.hasAnAttackMove();
 
         Coordinate from = selectedPiece;
         Coordinate to = action.getLocation();
@@ -115,30 +146,41 @@ public class Checkers implements Game {
 
         }
         selectedMove.apply(this);
-        processTurn();
+        return handleEndTurn(action, selectedMove);
+
+    }
+
+    private CheckersUIResponse handleEndTurn(CheckersUIAction action, Move selectedMove) {
         removeSelection();
+
+        Piece newPiece = getPiece(action.getLocation());
+        CheckersMoveCollection moves = getAllMoves(newPiece);
+        if (selectedMove.mustBeTaken() && moves.hasAnAttackMove()) {
+            applySelection(newPiece);
+            mustTakeMoves = true;
+        } else {
+            processTurn();
+            mustTakeMoves = false;
+        }
         return new CheckersUIResponse(true, CheckersUIResponse.ResponseType.SUCCESS);
     }
 
-
-    private CheckersUIResponse handleSelection(CheckersUIAction action) {
-        System.out.println("Calling handle selection.");
-
-        if (selectedPiece != null) return null;
-
-        Coordinate selected = action.getLocation();
-        Piece piece = getPiece(selected);
-        if (!piece.getPlayer().equals(action.getPlayer()))
-            return new CheckersUIResponse(false, CheckersUIResponse.ResponseType.INVALID_SELECTION);
-
-        piece.setSelected(true);
-        selectedPiece = piece.getCoordinate();
-        return new CheckersUIResponse(true, CheckersUIResponse.ResponseType.SUCCESS);
-    }
-
+    /**
+     * Removes the "Selected" status from a piece.
+     */
     private void removeSelection() {
         selectedPiece = null;
         loopOverPieces(piece -> piece.setSelected(false));
+    }
+
+    /**
+     * Adds the "Selected" status to a piece.
+     *
+     * @param piece
+     */
+    private void applySelection(Piece piece) {
+        selectedPiece = piece.getCoordinate();
+        piece.setSelected(true);
     }
 
     private void loopOverPieces(Consumer<Piece> consumer) {
@@ -149,7 +191,19 @@ public class Checkers implements Game {
         }
     }
 
-    private List<Move> getAllMoves(Piece piece) {
+    private CheckersMoveCollection getAllMoves(CheckersPlayer player) {
+        CheckersMoveCollection moveCollection = new CheckersMoveCollection();
+        loopOverPieces(piece -> {
+            if (piece.getPlayer() == null || !piece.getPlayer().equals(player)) {
+                return;
+            }
+            moveCollection.addAll(piece.getPossibleMoves(this));
+        });
+
+        return moveCollection;
+    }
+
+    private CheckersMoveCollection getAllMoves(Piece piece) {
         return piece.getPossibleMoves(this);
     }
 
@@ -162,6 +216,7 @@ public class Checkers implements Game {
     }
 
     private void processTurn() {
+
         // Essentially change the current turn of the game.
         if (currentTurn.equals(player1)) {
             currentTurn = player2;
@@ -171,7 +226,6 @@ public class Checkers implements Game {
     }
 
     public boolean isAtBorder(Coordinate coordinate) {
-        if (coordinate.getRow() == 0 || coordinate.getRow() == BOARD_SIZE - 1) return true;
-        return false;
+        return coordinate.getRow() == 0 || coordinate.getRow() == BOARD_SIZE - 1;
     }
 }

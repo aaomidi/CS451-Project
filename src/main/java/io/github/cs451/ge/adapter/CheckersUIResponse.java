@@ -16,6 +16,7 @@ public class CheckersUIResponse {
         INVALID_TURN,
         INVALID_SELECTION,
         INVALID_MOVE,
-        HAVE_TO_ATTACK;
+        HAVE_TO_ATTACK,
+        MUST_COMPLETE_JUMPS;
     }
 }
