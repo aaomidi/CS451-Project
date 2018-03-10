@@ -67,9 +67,8 @@ public abstract class Piece {
         if (jumpPiece == null) return false;
 
         // It's an empty block
-        if (jumpPiece.canOccupy()) return true;
+        return jumpPiece.canOccupy();
 
-        return false;
     }
 
     public abstract Piece moveTo(Coordinate coordinate);

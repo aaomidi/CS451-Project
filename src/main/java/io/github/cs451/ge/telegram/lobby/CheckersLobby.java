@@ -31,15 +31,14 @@ public class CheckersLobby extends Menu {
         return true;
     }
 
-    public CheckersInline createGame() {
+    public void createGame() {
         Checkers game = new Checkers(lobbyOwner, opponent);
         game.resetBoard();
-        CheckersInline inline = new CheckersInline(getBot(), inlineMessageId, game);
+        CheckersInline inline = new CheckersInline(getBot(), game);
         MenuHandler.registerMenu(inline);
         MenuHandler.unregisterMenu(this);
 
         this.migrateTo(inline);
-        return inline;
     }
 
     @Override

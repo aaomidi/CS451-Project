@@ -69,7 +69,7 @@ public class Checkers implements Game {
     }
 
     public CheckersUIResponse handleAction(CheckersUIAction action) {
-        if (winner == null) return new CheckersUIResponse(false, CheckersUIResponse.ResponseType.GAME_OVER);
+        if (winner != null) return new CheckersUIResponse(false, CheckersUIResponse.ResponseType.GAME_OVER);
         // Only process action for the current player.
         if (!currentTurn.equals(action.getPlayer())) {
             return new CheckersUIResponse(false, CheckersUIResponse.ResponseType.INVALID_TURN);
@@ -96,9 +96,9 @@ public class Checkers implements Game {
 
         CheckersMoveCollection moves = getAllMoves(action.getPlayer());
         // If there is an attack move available
-        if (getAllMoves(action.getPlayer()).hasAnAttackMove() && !getAllMoves(piece).hasAnAttackMove()) {
+        if (getAllMoves(action.getPlayer()).hasAnAttackMove() && !getAllMoves(piece).hasAnAttackMove())
             return new CheckersUIResponse(false, CheckersUIResponse.ResponseType.HAVE_TO_ATTACK);
-        }
+
 
         applySelection(piece);
         return new CheckersUIResponse(true, CheckersUIResponse.ResponseType.SUCCESS);
@@ -110,7 +110,7 @@ public class Checkers implements Game {
         // There is no selected piece.
         if (selectedPiece == null) return null;
 
-        // Player wants to disconnect
+        // Player wants to disselect
         if (selectedPiece.equals(action.getLocation())) {
             if (mustTakeMoves) {
                 return new CheckersUIResponse(false, CheckersUIResponse.ResponseType.MUST_COMPLETE_JUMPS);
@@ -128,6 +128,7 @@ public class Checkers implements Game {
 
         Move selectedMove = null;
         moves.forEach(m -> System.out.printf("%s - %s%n", m.getClass().getName(), m.toString()));
+       // Searching for the move
         for (Move move : moves) {
             if (move.mustBeTaken()) hasAttackMove = true;
 
@@ -194,19 +195,18 @@ public class Checkers implements Game {
         }
     }
 
-    private boolean checkEndGame() {
+    private void checkEndGame() {
         CheckersMoveCollection p1Moves = getAllMoves(player1);
         if (p1Moves.isEmpty()) {
-            winner = player1;
-            return true;
+            winner = player2;
+            return;
         }
         CheckersMoveCollection p2Moves = getAllMoves(player2);
 
         if (p2Moves.isEmpty()) {
-            winner = player2;
-            return true;
+            winner = player1;
+            return;
         }
-        return false;
     }
 
     private CheckersMoveCollection getAllMoves(CheckersPlayer player) {

@@ -15,13 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CheckersInline extends Menu {
-    private final String inlineMessageId;
     @Getter
     private final Checkers checkers;
 
-    public CheckersInline(TelegramBot bot, String inlineMessageId, Checkers checkers) {
+    public CheckersInline(TelegramBot bot, Checkers checkers) {
         super(bot);
-        this.inlineMessageId = inlineMessageId;
         this.checkers = checkers;
     }
 
