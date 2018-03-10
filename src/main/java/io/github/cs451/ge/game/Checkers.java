@@ -25,6 +25,8 @@ public class Checkers implements Game {
 
     private CheckersPlayer currentTurn;
     private boolean mustTakeMoves;
+    private CheckersPlayer winner;
+
 
     public Checkers(CheckersPlayer player1, CheckersPlayer player2) {
         this.player1 = player1;
@@ -57,7 +59,6 @@ public class Checkers implements Game {
         try {
             return rows.get(coordinate.getRow()).getPiece(coordinate);
         } catch (Exception ex) {
-            ex.printStackTrace();
             return null;
         }
     }
@@ -68,6 +69,7 @@ public class Checkers implements Game {
     }
 
     public CheckersUIResponse handleAction(CheckersUIAction action) {
+        if (winner == null) return new CheckersUIResponse(false, CheckersUIResponse.ResponseType.GAME_OVER);
         // Only process action for the current player.
         if (!currentTurn.equals(action.getPlayer())) {
             return new CheckersUIResponse(false, CheckersUIResponse.ResponseType.INVALID_TURN);
@@ -162,6 +164,7 @@ public class Checkers implements Game {
             processTurn();
             mustTakeMoves = false;
         }
+        checkEndGame();
         return new CheckersUIResponse(true, CheckersUIResponse.ResponseType.SUCCESS);
     }
 
@@ -189,6 +192,21 @@ public class Checkers implements Game {
                 consumer.accept(piece);
             }
         }
+    }
+
+    private boolean checkEndGame() {
+        CheckersMoveCollection p1Moves = getAllMoves(player1);
+        if (p1Moves.isEmpty()) {
+            winner = player1;
+            return true;
+        }
+        CheckersMoveCollection p2Moves = getAllMoves(player2);
+
+        if (p2Moves.isEmpty()) {
+            winner = player2;
+            return true;
+        }
+        return false;
     }
 
     private CheckersMoveCollection getAllMoves(CheckersPlayer player) {

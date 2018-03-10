@@ -43,4 +43,8 @@ public class CheckersMoveCollection implements Iterable<Move> {
     public Move get(int index) {
         return moves.get(index);
     }
+
+    public boolean isEmpty() {
+        return moves.isEmpty();
+    }
 }

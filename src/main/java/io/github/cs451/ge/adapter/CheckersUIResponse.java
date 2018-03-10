@@ -20,6 +20,7 @@ public class CheckersUIResponse {
         INVALID_SELECTION("You can't select that."),
         INVALID_MOVE("That's not a valid move."),
         HAVE_TO_ATTACK("You have to attack."),
+        GAME_OVER("Game is over."),
         MUST_COMPLETE_JUMPS("You must complete your attack jumps.");
         private final String message;
 
