@@ -9,34 +9,47 @@ import lombok.ToString;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 @Getter
 @ToString
 public class Checkers implements Game {
     private final static int BOARD_SIZE = 8;
+    private final Map<Player, CheckersPlayer> mapping = new HashMap<>();
+    private final SecureRandom random = new SecureRandom();
+
     private final CheckersPlayer player1;
     private final CheckersPlayer player2;
+
     private final List<CheckersRow> rows = new ArrayList<>(BOARD_SIZE);
-    private final SecureRandom random = new SecureRandom();
     private final CheckersDrawHandler checkersDrawHandler = new CheckersDrawHandler(this);
 
+    // Extras
     private Coordinate selectedPiece;
-
     private CheckersPlayer currentTurn;
     private boolean mustTakeMoves;
     private CheckersPlayer winner;
+
     @Getter
     private boolean completed = false;
 
 
-    public Checkers(CheckersPlayer player1, CheckersPlayer player2) {
-        this.player1 = player1;
-        this.player2 = player2;
+    public Checkers(Player player1, Player player2) {
 
-        player1.setColor(CheckersColor.RED);
-        player2.setColor(CheckersColor.WHITE);
+        this.player1 = registerPlayer(player1, CheckersColor.RED);
+        this.player2 = registerPlayer(player2, CheckersColor.WHITE);
+
+    }
+
+    private CheckersPlayer registerPlayer(Player player, CheckersColor color) {
+        return mapping.computeIfAbsent(player, player3 -> new CheckersPlayer(player3, color));
+    }
+
+    public CheckersPlayer getPlayer(Player player) {
+        return mapping.get(player);
     }
 
     private void clear() {

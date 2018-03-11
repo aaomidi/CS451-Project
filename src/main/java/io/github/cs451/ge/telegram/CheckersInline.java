@@ -38,7 +38,7 @@ public class CheckersInline extends Menu {
         }
         // Add the draw button
         if (!checkers.isCompleted()) {
-            rows.add(new MenuRow(Collections.singletonList(new DrawButton(checkers))));
+            rows.add(new MenuRow(Collections.singletonList(new DrawButton(this))));
         }
         return rows;
     }

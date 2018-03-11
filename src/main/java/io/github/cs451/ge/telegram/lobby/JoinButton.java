@@ -5,6 +5,7 @@ import com.jtelegram.api.events.inline.keyboard.CallbackQueryEvent;
 import com.jtelegram.api.menu.MenuButton;
 import com.jtelegram.api.user.User;
 import io.github.cs451.ge.game.CheckersPlayer;
+import io.github.cs451.ge.game.Player;
 import io.github.cs451.ge.game.PlayerRegistry;
 
 public class JoinButton extends MenuButton {
@@ -22,8 +23,7 @@ public class JoinButton extends MenuButton {
     @Override
     public boolean onPress(CallbackQueryEvent callbackQueryEvent) {
         User user = callbackQueryEvent.getQuery().getFrom();
-        CheckersPlayer player = PlayerRegistry.getPlayer(user);
-
+        Player player = PlayerRegistry.getPlayer(user);
         if (lobby.join(player)) {
             lobby.createGame();
         }
