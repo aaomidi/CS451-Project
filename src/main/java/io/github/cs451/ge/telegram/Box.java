@@ -46,7 +46,6 @@ public class Box extends MenuButton {
             CheckersUIResponse response = parent.getCheckers().handleAction(action);
             System.out.println(response);
             if (response == null) {
-                System.out.println("boop");
                 return false;
             }
             AnswerCallbackQuery answer = AnswerCallbackQuery.builder().showAlert(true).text(response.getResponseType().getMessage()).queryId(callbackQueryEvent.getQuery().getId()).build();
