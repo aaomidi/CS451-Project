@@ -57,7 +57,7 @@ public class CheckersInline extends Menu {
     @Override
     public TextBuilder getMenuMessage() {
         if (getCheckers().getWinner() == null) {
-            return TextBuilder.create().plain(String.format("Current turn: %s%s", getCheckers().getCurrentTurn().getUser().getUsernameFallbackName(), getCheckers().getCurrentTurn().getColor().getColor()));
+            return TextBuilder.create().plain(String.format("Current turn: %s %s", getCheckers().getCurrentTurn().getUser().getUsernameFallbackName(), getCheckers().getCurrentTurn().getColor().getColor()));
         } else {
             return TextBuilder.create().plain(String.format("Winner: %s", getCheckers().getWinner().getUser().getUsernameFallbackName()));
         }
