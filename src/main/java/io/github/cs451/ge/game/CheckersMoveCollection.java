@@ -50,10 +50,9 @@ public class CheckersMoveCollection implements Iterable<Move> {
         return moves.isEmpty();
     }
 
-    public void applyFormatting(Checkers checkers) {
-        boolean hasAttackMove = hasAnAttackMove();
+    public void applyFormatting() {
         Stream<Move> stream = moves.stream();
-        if (hasAttackMove) {
+        if (hasAnAttackMove()) {
             stream = stream.filter(Move::mustBeTaken);
         }
         stream.forEach(move -> move.getTo().setUsed(true));

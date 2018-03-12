@@ -207,7 +207,7 @@ public class Checkers implements Game {
         selectedPiece = piece.getCoordinate();
         piece.setSelected(true);
         CheckersMoveCollection moves = getAllMoves(piece);
-        moves.applyFormatting(this);
+        moves.applyFormatting();
 
     }
 
