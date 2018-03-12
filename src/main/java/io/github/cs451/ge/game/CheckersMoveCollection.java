@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Predicate;
 
 
 @ToString
@@ -48,5 +47,9 @@ public class CheckersMoveCollection implements Iterable<Move> {
 
     public boolean isEmpty() {
         return moves.isEmpty();
+    }
+
+    public void applyFormatting(Checkers checkers) {
+        forEach(move -> move.getTo().setUsed(true));
     }
 }

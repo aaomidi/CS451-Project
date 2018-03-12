@@ -192,7 +192,10 @@ public class Checkers implements Game {
      */
     private void removeSelection() {
         selectedPiece = null;
-        loopOverPieces(piece -> piece.setSelected(false));
+        loopOverPieces(piece -> {
+            piece.setSelected(false);
+            piece.setUsed(false);
+        });
     }
 
     /**
@@ -203,6 +206,9 @@ public class Checkers implements Game {
     private void applySelection(Piece piece) {
         selectedPiece = piece.getCoordinate();
         piece.setSelected(true);
+        CheckersMoveCollection moves = getAllMoves(piece);
+        moves.applyFormatting(this);
+
     }
 
     private void loopOverPieces(Consumer<Piece> consumer) {
@@ -247,6 +253,7 @@ public class Checkers implements Game {
 
     public void endGame() {
         completed = true;
+        removeSelection();
     }
 
     private void resetTurn() {
