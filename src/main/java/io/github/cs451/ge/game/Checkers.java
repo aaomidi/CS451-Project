@@ -105,7 +105,7 @@ public class Checkers implements Game {
     }
 
     private CheckersUIResponse handleSelection(CheckersUIAction action) {
-        System.out.println("Calling handle selection.");
+        //System.out.println("Calling handle selection.");
 
         if (selectedPiece != null) return null;
 
@@ -126,7 +126,7 @@ public class Checkers implements Game {
     }
 
     private CheckersUIResponse handleMove(CheckersUIAction action) {
-        System.out.println("Calling handle move.");
+        //System.out.println("Calling handle move.");
         CheckersPlayer player = action.getPlayer();
         // There is no selected piece.
         if (selectedPiece == null) return null;
@@ -148,7 +148,7 @@ public class Checkers implements Game {
         Coordinate to = action.getLocation();
 
         Move selectedMove = null;
-        moves.forEach(m -> System.out.printf("%s - %s%n", m.getClass().getName(), m.toString()));
+        //moves.forEach(m -> System.out.printf("%s - %s%n", m.getClass().getName(), m.toString()));
         // Searching for the move
         for (Move move : moves) {
             if (move.mustBeTaken()) hasAttackMove = true;

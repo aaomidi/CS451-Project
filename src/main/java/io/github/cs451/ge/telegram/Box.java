@@ -45,7 +45,7 @@ public class Box extends MenuButton {
 
             CheckersUIAction action = new CheckersUIAction(checkersPlayer, coordinate);
             CheckersUIResponse response = parent.getCheckers().handleAction(action);
-            System.out.println(response);
+            //System.out.println(response);
             if (response == null) {
                 return false;
             }

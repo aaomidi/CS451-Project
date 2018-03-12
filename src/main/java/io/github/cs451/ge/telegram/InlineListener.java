@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class InlineListener {
     public static void onEvent(ChosenInlineResultEvent event) {
-        System.out.println("Called1");
+        //System.out.println("Called1");
         TelegramBot bot = event.getBot();
 
         CheckersLobby checkers = new CheckersLobby(bot, PlayerRegistry.getPlayer(event.getChosenResult().getFrom()), event.getChosenResult().getInlineMessageId());
@@ -27,7 +27,7 @@ public class InlineListener {
     }
 
     public static void onEvent(InlineQueryEvent event) {
-        System.out.println("Called2");
+        //System.out.println("Called2");
         InlineResultArticle article = InlineResultArticle.builder().id(UUID.randomUUID().toString())
                 .id(UUID.randomUUID().toString())
                 .title("Checkers")
