@@ -13,10 +13,6 @@
 2. You need to ensure inline mode is turned on and feedback is set to 100%.
 3. Make a copy of the sample config file and use it to configure the bot.
 
-### Video Tutorial
-
-https://youtu.be/nwa7r9_hxOQ
-
 ### Testing
 
 The telegram library is taken as is, and since testing it requires an external service it is considered untestable. Mocking the behavior would essentially be reimplementing the entire bot library which would make no sense.
