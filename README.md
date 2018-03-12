@@ -5,7 +5,7 @@
 
 1. Install JDK 1.8 and Maven.
 2. `mvn clean package`
-3. java -jar jar/GameEngine.jar
+3. `java -jar jar/GameEngine.jar`
 
 ### Configuration Guide
 
